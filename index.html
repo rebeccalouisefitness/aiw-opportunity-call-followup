@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Opportunity Call follow-up · AIW-355 design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FBF8F3; --card:#FFFFFF; --border:#E8E1D4; --forest:#263426; --forest2:#34473A; --dark:#1E2A1E;
+  --body:#4B554D; --muted:#9C9787; --orange:#E87532; --orangeFill:#FBE9DC; --sage:#5A7A5E; --sageFill:#E7EFE6;
+  --tan:#C8956C; --tanFill:#F3E7D8; --rasp:#9B3B5A; --raspFill:#F2E6EA; --hair:#EAE4D8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#EFE9DF;font-family:Inter,system-ui,sans-serif;color:var(--body);-webkit-font-smoothing:antialiased}
+h1,h2,h3,.pj{font-family:'Plus Jakarta Sans',Inter,sans-serif}
+.page{max-width:1240px;margin:0 auto;padding:28px 16px 80px}
+.top{max-width:760px;margin:0 auto 22px;text-align:center}
+.top .kick{font:800 11px/1 'Plus Jakarta Sans';letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.top h1{font-size:26px;color:var(--dark);margin:8px 0 8px;letter-spacing:-.01em}
+.top p{font-size:14.5px;line-height:1.55}
+.toggle{display:flex;gap:8px;justify-content:center;margin:18px 0 26px}
+.pill{min-height:38px;padding:9px 20px;border-radius:999px;background:#fff;border:1.5px solid var(--border);font:600 13px/17px 'Plus Jakarta Sans';color:var(--body);cursor:pointer}
+.pill.on{border-color:var(--forest);color:var(--forest);font-weight:800}
+.grid{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;align-items:flex-start}
+.col{width:390px}
+.cap{font:800 11px/1.3 'Plus Jakarta Sans';letter-spacing:.12em;text-transform:uppercase;color:var(--forest);margin:0 4px 10px}
+.cap span{display:block;font:500 12.5px/1.45 Inter;letter-spacing:0;text-transform:none;color:var(--body);margin-top:4px}
+.phone{width:390px;background:var(--bg);border-radius:34px;border:1px solid #DDD5C6;overflow:hidden;box-shadow:0 12px 36px rgba(30,42,30,.10)}
+.status{height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font:600 15px Inter;color:#000}
+.scr{padding:4px 16px 24px}
+.hdr{display:flex;align-items:center;justify-content:space-between;margin:6px 0 16px}
+.ib{width:38px;height:38px;border-radius:12px;background:#fff;border:1px solid var(--border);display:flex;align-items:center;justify-content:center}
+.ib svg{width:18px;height:18px;stroke:var(--dark);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.eyebrow{flex:1;margin-left:12px;font:800 11px 'Plus Jakarta Sans';letter-spacing:.12em;color:var(--body)}
+.who{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.av{width:52px;height:52px;border-radius:14px;background:var(--tanFill);display:flex;align-items:center;justify-content:center;font:700 20px 'Plus Jakarta Sans';color:var(--tan)}
+.nm{font:800 21px/1.15 'Plus Jakarta Sans';color:var(--dark)}
+.sub{font-size:12.5px;color:var(--muted);margin-top:3px}
+.tag{margin-left:auto;align-self:flex-start;background:var(--raspFill);color:var(--rasp);border-radius:999px;padding:4px 9px;font:800 9.5px 'Plus Jakarta Sans';letter-spacing:.06em;white-space:nowrap}
+.tag:before{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--rasp);margin-right:5px;vertical-align:1px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.stat{background:#fff;border:1px solid var(--border);border-radius:14px;padding:10px 12px}
+.stat .l{font:800 9.5px 'Plus Jakarta Sans';letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.stat .v{font:700 14px/1.3 'Plus Jakarta Sans';color:var(--dark);margin-top:4px}
+.stat.wide{grid-column:1/3}
+.card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:16px;margin-top:12px}
+.k{font:800 10px 'Plus Jakarta Sans';letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+.k.act{color:var(--orange)}
+.t{font:800 17px/1.3 'Plus Jakarta Sans';color:var(--dark);margin-top:6px}
+.p{font-size:13px;line-height:1.5;margin-top:6px}
+.btns{display:flex;gap:8px;margin-top:14px}
+.btn{flex:1;min-height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font:700 14px 'Plus Jakarta Sans';border:1.5px solid var(--border);background:#fff;color:var(--forest);text-align:center;padding:0 8px}
+.btn.fill{background:var(--forest);border-color:var(--forest);color:#fff}
+.btn.act{background:var(--orange);border-color:var(--orange);color:#fff}
+.btn.sm{min-height:36px;font-size:12.5px;border-radius:10px}
+.link{display:block;text-align:center;margin-top:12px;font:600 12.5px Inter;color:var(--sage)}
+.prompt{border:1.5px solid var(--orange);box-shadow:0 0 0 4px rgba(232,117,50,.08)}
+.tl{font:800 11px 'Plus Jakarta Sans';letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin:20px 2px 10px}
+.rail{position:relative;padding-left:26px}
+.rail:before{content:"";position:absolute;left:8px;top:8px;bottom:8px;width:2px;background:var(--hair)}
+.st{position:relative;background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px 13px;margin-bottom:9px}
+.st .dot{position:absolute;left:-25px;top:14px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:2px solid #D9D1C2}
+.st.sent .dot{background:var(--sage);border-color:var(--sage)}
+.st.sent .dot:after{content:"";position:absolute;left:4px;top:1.5px;width:4px;height:7px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.st.due{border:1.5px solid var(--orange)}
+.st.due .dot{border-color:var(--orange);background:#fff}
+.st.due .dot:after{content:"";position:absolute;left:3px;top:3px;width:6px;height:6px;border-radius:50%;background:var(--orange)}
+.st.ghost{background:transparent;border-style:dashed}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.day{font:800 10px 'Plus Jakarta Sans';letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.ttl{font:700 14px/1.3 'Plus Jakarta Sans';color:var(--dark);margin-top:3px}
+.ang{font-size:12px;line-height:1.45;color:var(--body);margin-top:3px}
+.badge{font:800 10px 'Plus Jakarta Sans';letter-spacing:.04em;border-radius:999px;padding:4px 8px;white-space:nowrap}
+.b-sent{background:var(--sageFill);color:var(--sage)}
+.b-due{background:var(--orangeFill);color:#B4561F}
+.b-up{background:#F3EFE7;color:var(--muted)}
+.b-auto{background:var(--raspFill);color:var(--rasp)}
+.msg{background:#FAF7F1;border:1px solid var(--hair);border-radius:12px;padding:10px 11px;font-size:12.5px;line-height:1.5;margin-top:10px;color:var(--dark)}
+.msg b{color:var(--rasp);font-weight:600}
+.seg{display:flex;gap:8px;margin-top:10px}
+.seg .pill{flex:1;min-height:34px;padding:7px 10px;font-size:12.5px}
+.sends{display:flex;gap:6px;margin-top:10px}
+.sends .btn{min-height:36px;font-size:12.5px;border-radius:10px}
+.note{font-size:11.5px;color:var(--muted);line-height:1.45;margin-top:8px}
+.split{display:flex;gap:8px;margin-top:10px}
+.callrow{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--hair)}
+.callrow:first-of-type{border-top:0}
+.cal{width:44px;height:48px;border-radius:12px;background:var(--tanFill);display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none}
+.cal .m{font:800 9px 'Plus Jakarta Sans';letter-spacing:.1em;color:var(--tan)}
+.cal .d{font:800 18px/1 'Plus Jakarta Sans';color:var(--dark)}
+.cal.next{background:var(--forest)}.cal.next .m{color:#E7C89C}.cal.next .d{color:#fff}
+.cal.past{background:#F3EFE7}.cal.past .d{color:var(--muted)}
+.ci{flex:1}
+.ci .a{font:700 13.5px 'Plus Jakarta Sans';color:var(--dark)}
+.ci .b{font-size:12px;color:var(--muted);margin-top:2px}
+.switch{width:38px;height:22px;border-radius:99px;background:var(--forest);position:relative;flex:none}
+.switch:after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.caught{background:#E7EEE6;border-radius:18px;padding:22px 18px;text-align:center;margin-top:12px}
+.ring{width:42px;height:42px;border-radius:12px;background:#fff;margin:0 auto 12px;display:flex;align-items:center;justify-content:center}
+.caught .t{font-size:17px}
+.flowbar{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.fchip{font:700 11px 'Plus Jakarta Sans';border-radius:999px;padding:5px 9px;background:#F3EFE7;color:var(--body)}
+.fchip.on{background:var(--forest);color:#fff}
+/* explainer */
+.ex{max-width:900px;margin:44px auto 0;background:#fff;border:1px solid var(--border);border-radius:22px;padding:26px 26px 10px}
+.ex h2{font-size:19px;color:var(--dark);margin-bottom:10px}
+.ex h3{font-size:14.5px;color:var(--forest);margin:20px 0 6px}
+.ex p,.ex li{font-size:14px;line-height:1.6}
+.ex ul{padding-left:20px}
+.tpl{border:1px solid var(--hair);background:#FAF7F1;border-radius:14px;padding:12px 14px;margin:8px 0 12px}
+.tpl .h{font:800 10.5px 'Plus Jakarta Sans';letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.tpl .x{font-size:14px;line-height:1.55;color:var(--dark)}
+.tpl .x i{font-style:normal;color:var(--rasp);font-weight:600}
+.cur-note{max-width:390px;margin:14px auto 0;font-size:13px;line-height:1.55;background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px 14px}
+.scope{display:flex;align-items:center;justify-content:center;gap:16px;margin:2px 0 6px}.scope span{font:600 14px 'Plus Jakarta Sans';color:var(--muted)}.scope span.on{font-weight:800;color:var(--forest)}.scope i{width:1px;height:13px;background:#E2DACB}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="top">
+    <div class="kick">AIW-355 · Design mockup · not built</div>
+    <h1>Opportunity Call follow-up, for every call we run</h1>
+    <p>After the call you tap <b>Attended</b> or <b>Didn't attend</b>. Each lead then gets a short, warm sequence, and anyone who isn't ready yet is invited to the next call automatically.</p>
+  </div>
+  <div class="toggle" role="tablist">
+    <button class="pill" data-v="cur">Current</button>
+    <button class="pill on" data-v="new">New</button>
+  </div>
+
+  <!-- CURRENT -->
+  <div id="v-cur" hidden>
+    <div class="grid">
+      <div class="col">
+        <div class="cap">Today · lead who registered after the call<span>A lead who registered after the call has no call date, so the app finds nothing to send and says "All caught up".</span></div>
+        <div class="phone">
+          <div class="status"><span>08:36</span><span>●●● 99</span></div>
+          <div class="scr">
+            <div class="hdr"><div class="ib"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><div class="eyebrow">CLIENT LEAD · FOLLOW-UP</div><div class="ib"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div></div>
+            <div class="who"><div class="av">S</div><div><div class="nm">Sofia Marin</div><div class="sub">Portugal · added today</div></div><div class="tag">OPPORTUNITY CALL</div></div>
+            <div class="stats">
+              <div class="stat"><div class="l">Last followed up</div><div class="v">Not yet</div></div>
+              <div class="stat"><div class="l">Next due</div><div class="v">All caught up</div></div>
+              <div class="stat wide"><div class="l">Booked call</div><div class="v">No call booked</div></div>
+              <div class="stat wide"><div class="l">Lead status</div><div class="v">How's it going with Sofia Marin? ›</div></div>
+            </div>
+            <div class="caught">
+              <div class="ring"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5A7A5E" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="t">You're all caught up with Sofia Marin 🎉</div>
+              <div class="p">Every follow-up in the sequence has gone out. Nothing to send — move them on when they book or convert.</div>
+            </div>
+            <div class="tl">Follow-up timeline</div>
+            <div style="height:120px"></div>
+          </div>
+        </div>
+        <div class="cur-note"><b>Why:</b> there is only one call date on file (13 Oct) and no future one. Anyone who registers after it gets no call date, and with no call date the Opportunity Call steps list is empty, so the screen says "All caught up".</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEW -->
+  <div id="v-new">
+    <div class="grid">
+
+      <!-- 1 -->
+      <div class="col">
+        <div class="cap">1 · Right after the call<span>Shows up once the call time has passed. One tap each.</span></div>
+        <div class="phone"><div class="status"><span>12:05</span><span>●●● 87</span></div><div class="scr">
+          <div class="hdr"><div class="ib"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><div class="eyebrow">OPPORTUNITY CALL · FOLLOW-UP</div><div class="ib"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div></div>
+          <div class="who"><div class="av">S</div><div><div class="nm">Sofia Marin</div><div class="sub">Registered 4 Nov</div></div><div class="tag">OPPORTUNITY CALL</div></div>
+          <div class="stats">
+            <div class="stat"><div class="l">Their call</div><div class="v">Tue 10 Nov · 10am ET</div></div>
+            <div class="stat"><div class="l">Next due</div><div class="v">Mark attendance</div></div>
+          </div>
+          <div class="card prompt">
+            <div class="k act">The call has finished</div>
+            <div class="t">Did Sofia come to the call?</div>
+            <div class="p">Tell us and we'll line up the right messages for her.</div>
+            <div class="btns"><div class="btn fill">Attended</div><div class="btn">Didn't attend</div></div>
+            <span class="link">Not sure? Send "Did you make it?" instead ›</span>
+          </div>
+          <div class="tl">Before the call</div>
+          <div class="rail">
+            <div class="st sent"><span class="dot"></span><div class="row"><div><div class="day">Day before</div><div class="ttl">Reminder with the Zoom link</div></div><span class="badge b-sent">Sent · 9 Nov</span></div></div>
+            <div class="st sent"><span class="dot"></span><div class="row"><div><div class="day">10 min before</div><div class="ttl">We're on in 10</div></div><span class="badge b-sent">Sent · 10 Nov</span></div></div>
+          </div>
+        </div></div>
+      </div>
+
+      <!-- 2 -->
+      <div class="col">
+        <div class="cap">2 · Attended<span>Three messages over five days. When she says yes, one tap moves her to Customer or Business.</span></div>
+        <div class="phone"><div class="status"><span>09:12</span><span>●●● 91</span></div><div class="scr">
+          <div class="hdr"><div class="ib"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><div class="eyebrow">OPPORTUNITY CALL · FOLLOW-UP</div><div class="ib"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div></div>
+          <div class="who"><div class="av">S</div><div><div class="nm">Sofia Marin</div><div class="sub">Attended Tue 10 Nov</div></div><div class="tag">OPPORTUNITY CALL</div></div>
+          <div class="flowbar"><span class="fchip">Registered</span><span class="fchip on">Attended</span><span class="fchip">Moved on</span></div>
+          <div class="tl">After the call</div>
+          <div class="rail">
+            <div class="st sent"><span class="dot"></span><div class="row"><div><div class="day">Same day</div><div class="ttl">Thanks for coming</div></div><span class="badge b-sent">Sent · 10 Nov</span></div></div>
+            <div class="st due"><span class="dot"></span>
+              <div class="row"><div><div class="day">Day 2</div><div class="ttl">Send her page</div></div><span class="badge b-due">Due today</span></div>
+              <div class="ang">Pick the page that fits what she's interested in.</div>
+              <div class="seg"><button class="pill">Customer</button><button class="pill on">Business</button></div>
+              <div class="msg">Hey Sofia, here's everything about the business side in one place, so you can look through it at your own pace: <b>aiwellnesscoach.co/rebecca/team</b> We're here for any questions at all. Rebecca</div>
+              <div class="sends"><div class="btn sm fill">Text</div><div class="btn sm">WhatsApp</div><div class="btn sm">Email</div></div>
+            </div>
+            <div class="st"><span class="dot"></span><div class="row"><div><div class="day">Day 5</div><div class="ttl">Check in, offer a 1:1</div></div><span class="badge b-up">Sun 15 Nov</span></div></div>
+          </div>
+          <div class="card">
+            <div class="k">When she says yes</div>
+            <div class="split"><div class="btn sm">Move to Customer</div><div class="btn sm">Move to Business</div></div>
+            <div class="note">No reply by Day 12, or she says "not now"? She's invited to the next call automatically (screen 4).</div>
+          </div>
+        </div></div>
+      </div>
+
+      <!-- 3 -->
+      <div class="col">
+        <div class="cap">3 · Didn't attend<span>The replay and the next date go together, so there's always a way in.</span></div>
+        <div class="phone"><div class="status"><span>12:10</span><span>●●● 86</span></div><div class="scr">
+          <div class="hdr"><div class="ib"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><div class="eyebrow">OPPORTUNITY CALL · FOLLOW-UP</div><div class="ib"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div></div>
+          <div class="who"><div class="av">S</div><div><div class="nm">Sofia Marin</div><div class="sub">Missed Tue 10 Nov</div></div><div class="tag">OPPORTUNITY CALL</div></div>
+          <div class="flowbar"><span class="fchip">Registered</span><span class="fchip on">Didn't attend</span><span class="fchip">Next call</span></div>
+          <div class="tl">After the call</div>
+          <div class="rail">
+            <div class="st due"><span class="dot"></span>
+              <div class="row"><div><div class="day">Same day</div><div class="ttl">Sorry we missed you</div></div><span class="badge b-due">Due today</span></div>
+              <div class="msg">Hey Sofia, sorry we missed you on the call today. No worries at all, here's the replay to watch whenever suits you: <b>aiwellnesscollective.com/thanks</b> Our next live call is <b>Tuesday 8 December, 10:00am ET</b> and we'd love to see you there. Rebecca</div>
+              <div class="sends"><div class="btn sm fill">Text</div><div class="btn sm">WhatsApp</div><div class="btn sm">Email</div></div>
+            </div>
+            <div class="st"><span class="dot"></span><div class="row"><div><div class="day">Day 3</div><div class="ttl">Did you get to watch it?</div></div><span class="badge b-up">Fri 13 Nov</span></div>
+              <div class="ang">If she watched it, she moves to the Attended steps.</div></div>
+            <div class="st ghost"><span class="dot"></span><div class="row"><div><div class="day">3 days before</div><div class="ttl">Invite to the 8 Dec call</div></div><span class="badge b-auto">Automatic</span></div></div>
+          </div>
+          <div class="card">
+            <div class="k">She replied</div>
+            <div class="split"><div class="btn sm">She watched it</div><div class="btn sm">Not right now</div></div>
+          </div>
+        </div></div>
+      </div>
+
+      <!-- 4 -->
+      <div class="col">
+        <div class="cap">4 · Not ready → invited to the next call<span>No reply after the sequence, or "not now": she moves onto the next date and the reminders start again.</span></div>
+        <div class="phone"><div class="status"><span>10:02</span><span>●●● 79</span></div><div class="scr">
+          <div class="hdr"><div class="ib"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><div class="eyebrow">OPPORTUNITY CALL · FOLLOW-UP</div><div class="ib"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div></div>
+          <div class="who"><div class="av">S</div><div><div class="nm">Sofia Marin</div><div class="sub">Invited to 8 Dec</div></div><div class="tag">OPPORTUNITY CALL</div></div>
+          <div class="stats">
+            <div class="stat"><div class="l">Next call</div><div class="v">Tue 8 Dec · 10am ET</div></div>
+            <div class="stat"><div class="l">Invites</div><div class="v">2 of 3</div></div>
+          </div>
+          <div class="tl">8 December call</div>
+          <div class="rail">
+            <div class="st due"><span class="dot"></span>
+              <div class="row"><div><div class="day">3 days before</div><div class="ttl">Invite to the next call</div></div><span class="badge b-due">Due today</span></div>
+              <div class="msg">Hey Sofia, we have another AI Wellness call coming up on <b>Tuesday 8 December, 10:00am ET</b>. It would be lovely to have you with us, even just to listen. Shall I save you a spot? Rebecca</div>
+              <div class="sends"><div class="btn sm fill">Text</div><div class="btn sm">WhatsApp</div><div class="btn sm">Email</div></div>
+            </div>
+            <div class="st"><span class="dot"></span><div class="row"><div><div class="day">Day before</div><div class="ttl">Reminder with the Zoom link</div></div><span class="badge b-up">Mon 7 Dec</span></div></div>
+            <div class="st"><span class="dot"></span><div class="row"><div><div class="day">10 min before</div><div class="ttl">We're on in 10</div></div><span class="badge b-up">Tue 8 Dec</span></div></div>
+            <div class="st ghost"><span class="dot"></span><div class="row"><div><div class="day">After the call</div><div class="ttl">Attended / Didn't attend</div></div><span class="badge b-up">Ask again</span></div></div>
+          </div>
+          <div class="tl">10 November call</div>
+          <div class="rail">
+            <div class="st sent"><span class="dot"></span><div class="row"><div><div class="day">Attended</div><div class="ttl">3 messages sent · no reply</div></div><span class="badge b-sent">Done</span></div></div>
+          </div>
+        </div></div>
+      </div>
+
+      <!-- 5 -->
+      <div class="col">
+        <div class="cap">5 · Upcoming Opportunity Calls<span>One list feeds the registration page, the reminders and every "next call" message.</span></div>
+        <div class="phone"><div class="status"><span>10:20</span><span>●●● 79</span></div><div class="scr">
+          <div class="hdr"><div class="ib"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><div class="eyebrow">PROSPECTS · OPPORTUNITY CALL</div><div class="ib"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></div></div>
+          <div class="scope"><span>Customer</span><i></i><span>Business</span><i></i><span class="on">Opportunity Call</span></div>
+          <div class="card">
+            <div class="row"><div class="k">Upcoming Opportunity Calls</div><span class="badge b-up">All 10am ET</span></div>
+            <div style="margin-top:8px">
+              <div class="callrow"><div class="cal next"><span class="m">NOV</span><span class="d">10</span></div><div class="ci"><div class="a">Tuesday 10 November</div><div class="b">Next call · 18 registered</div></div><span class="badge b-sent">Next</span></div>
+              <div class="callrow"><div class="cal"><span class="m">DEC</span><span class="d">8</span></div><div class="ci"><div class="a">Tuesday 8 December</div><div class="b">6 registered · 4 re-invited</div></div></div>
+              <div class="callrow"><div class="cal"><span class="m">JAN</span><span class="d">12</span></div><div class="ci"><div class="a">Tuesday 12 January</div><div class="b">Opens after 8 Dec</div></div></div>
+              <div class="callrow"><div class="cal past"><span class="m">OCT</span><span class="d">13</span></div><div class="ci"><div class="a" style="color:var(--muted)">Tuesday 13 October</div><div class="b">Done · replay added</div></div></div>
+            </div>
+            <div class="btns"><div class="btn sm">+ Add a date</div></div>
+          </div>
+          <div class="card">
+            <div class="row"><div><div class="ttl" style="margin:0">Repeat automatically</div><div class="ang">Second Tuesday of every month, 10:00am ET</div></div><span class="switch"></span></div>
+            <div class="note" style="margin-top:10px"><b style="color:var(--dark)">How the next date is picked:</b> the first call on this list that is at least 3 days away. A lead who isn't ready after 10 Nov is invited to 8 Dec, not to a call happening tomorrow.</div>
+          </div>
+        </div></div>
+      </div>
+
+    </div>
+
+    <!-- explainer -->
+    <div class="ex">
+      <h2>Why the current lead shows "All caught up"</h2>
+      <p>The app keeps one list of Opportunity Call dates. It only has <b>13 October</b> on it. When someone registers, they're linked to the next call on that list. Anyone registering after 13 October gets <b>no call</b> (5 people so far, including the lead in her screenshot). With no call date, the Opportunity Call steps come back empty, and an empty list reads as "everything sent", so the screen says "All caught up". It's a missing date plus a wording bug. Nothing was actually sent.</p>
+
+      <h3>The flow</h3>
+      <ul>
+        <li><b>Before the call:</b> unchanged. Two automatic emails from AI Wellness (confirmation, 1 hour before), plus the coach's day-before and 10-minutes-before messages.</li>
+        <li><b>After the call:</b> the coach taps Attended / Didn't attend. If they don't know, they can send the existing "Did you make it?" message.</li>
+        <li><b>Attended:</b> same day thanks, day 2 their page (Customer or Business), day 5 check-in with a 1:1 offer. Yes → one tap to Customer or Business.</li>
+        <li><b>Didn't attend:</b> same day replay + next date, day 3 "did you get to watch it?". Watched → joins the Attended steps from day 2.</li>
+        <li><b>Not ready / no reply:</b> 3 days before the next call they're invited to it, then the usual reminders run again. After 3 calls with no reply they move to the monthly check-in.</li>
+      </ul>
+
+      <h3>Message templates</h3>
+      <div class="tpl"><div class="h">Attended · same day · Thanks for coming</div><div class="x">Hey <i>{first}</i>, thank you so much for coming to the AI Wellness call today, we loved having you there. Did anything stand out for you, or is there anything you'd like to ask? Just reply here. <i>{coach}</i></div></div>
+      <div class="tpl"><div class="h">Attended · day 2 · Business page</div><div class="x">Hey <i>{first}</i>, here's everything about the business side in one place, so you can look through it at your own pace: <i>{businessLink}</i> We're here for any questions at all. <i>{coach}</i></div></div>
+      <div class="tpl"><div class="h">Attended · day 2 · Customer page</div><div class="x">Hey <i>{first}</i>, here's the customer side in one place, so you can see how the app and the plan would work for you: <i>{customerLink}</i> We're here for any questions at all. <i>{coach}</i></div></div>
+      <div class="tpl"><div class="h">Attended · day 5 · Check in, offer a 1:1</div><div class="x">Hey <i>{first}</i>, just checking in. Did you get a chance to look through it? If it would help, we can have a quick call, just the two of us, and go through anything you're wondering about. Would that be useful? <i>{coach}</i></div></div>
+      <div class="tpl"><div class="h">Didn't attend · same day · Sorry we missed you</div><div class="x">Hey <i>{first}</i>, sorry we missed you on the call today. No worries at all, here's the replay to watch whenever suits you: <i>{replayLink}</i> Our next live call is <i>{nextCallDate}</i> and we'd love to see you there. <i>{coach}</i></div></div>
+      <div class="tpl"><div class="h">Didn't attend · day 3 · Did you get to watch it?</div><div class="x">Hey <i>{first}</i>, did you get a chance to watch the replay? Here it is again in case it got buried: <i>{replayLink}</i> And you're very welcome to join us live on <i>{nextCallDate}</i>. Just let me know and I'll save you a spot. <i>{coach}</i></div></div>
+      <div class="tpl"><div class="h">Not ready · when they say "not now"</div><div class="x">Hey <i>{first}</i>, totally understand, the timing has to feel right. We'll let you know when the next call is on, no pressure at all. <i>{coach}</i></div></div>
+      <div class="tpl"><div class="h">Re-invite · 3 days before the next call (automatic step)</div><div class="x">Hey <i>{first}</i>, we have another AI Wellness call coming up on <i>{nextCallDate}</i>. It would be lovely to have you with us, even just to listen. Shall I save you a spot? <i>{coach}</i></div></div>
+      <p class="note" style="margin-bottom:16px">Placeholders: {first} lead's first name · {coach} coach's first name · {replayLink} coach's own replay page · {nextCallDate} e.g. "Tuesday 8 December, 10:00am ET" · {businessLink} / {customerLink} the coach's own pages (aiwellnesscoach.co/&lt;coach&gt;/team and /customer). All names and dates on this page are examples.</p>
+    </div>
+  </div>
+</div>
+<script>
+document.querySelectorAll('.toggle .pill').forEach(function(b){b.addEventListener('click',function(){
+  document.querySelectorAll('.toggle .pill').forEach(function(x){x.classList.toggle('on',x===b)});
+  document.getElementById('v-cur').hidden = b.dataset.v!=='cur';
+  document.getElementById('v-new').hidden = b.dataset.v!=='new';
+});});
+if(location.hash==='#current'){document.querySelector('[data-v=cur]').click();}
+</script>
+</body>
+</html>
